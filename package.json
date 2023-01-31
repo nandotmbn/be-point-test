@@ -4,7 +4,8 @@
   "description": "IoT Listener for GDSC PENS",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.ts",
+    "start": "vercel dev",
+    "deploy" : "vercel deploy --prod",
     "build-dev": "npx tsc",
     "start-dev": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
