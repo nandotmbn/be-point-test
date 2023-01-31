@@ -5,6 +5,8 @@ import Chat, { validateChat, validateReceiverId } from "../../models/chat";
 import User from "../../models/user";
 import message from "../../views/message";
 import _ from "lodash";
+import ChatGroup, { validateGroupId } from "../../models/chat-group";
+import Group from "../../models/groups";
 
 const imageStorage = multer.diskStorage({
 	// Destination to store image
@@ -34,7 +36,7 @@ const upload = multer({
 	},
 });
 
-async function uploadImage(req: Request, res: Response) {
+async function uploadImageChat(req: Request, res: Response) {
 	const validateReceiverIdRes = validateReceiverId({
 		receiverId: req.params.receiverId,
 	});
@@ -98,5 +100,69 @@ async function uploadImage(req: Request, res: Response) {
 	);
 }
 
+async function uploadImageChatGroup(req: Request, res: Response) {
+	const validategroupIdRes = validateGroupId({
+		groupId: req.params.groupId,
+	});
+
+	if (validategroupIdRes.error)
+		return res.status(400).send(
+			message({
+				statusCode: 400,
+				data: validategroupIdRes.error.message,
+				message: "Bad Request",
+			})
+		);
+
+	const isSenderExist = await User.findById(req.query._id);
+	if (!isSenderExist) {
+		return res.status(404).send(
+			message({
+				statusCode: 404,
+				message: "Sender is not found",
+				data: req.body,
+			})
+		);
+	}
+
+	const isReceiver = await Group.findById(req.params.groupId);
+	if (!isReceiver) {
+		return res.status(404).send(
+			message({
+				statusCode: 404,
+				message: "Receiver is not found",
+				data: req.body,
+			})
+		);
+	}
+
+	const newChat = new ChatGroup({
+		senderId: req?.query?._id,
+		groupId: req.params.groupId,
+		content: req.query.fileName,
+		contentType: "image",
+	});
+
+	const chat = await newChat.save();
+	res.send(
+		message({
+			statusCode: 200,
+			message: "Chat Image has successfully sent",
+			data: {
+				..._.pick(
+					chat,
+					"senderId",
+					"groupId",
+					"content",
+					"contentType",
+					"isDeleteMe",
+					"_id"
+				),
+				baseUrl: process.env.baseUrlImage!,
+			},
+		})
+	);
+}
+
 export default upload;
-export { uploadImage };
+export { uploadImageChat, uploadImageChatGroup };

@@ -4,7 +4,7 @@ import deleteSelfChatGroup from "../controllers/chat-group/delete-self-chat";
 import getChatGroup from "../controllers/chat-group/get-chat";
 import postChatGroup from "../controllers/chat-group/post-chat";
 import headerAccessToken from "../controllers/headers/header-token";
-import upload, { uploadImage } from "../controllers/image/upload";
+import upload, { uploadImageChatGroup } from "../controllers/image/upload";
 const router = express.Router();
 
 router.get("/chat-group/:groupId", [headerAccessToken, getChatGroup]);
@@ -14,6 +14,6 @@ router.delete("/chat-group/:groupId/:chatId/self", [
 	headerAccessToken,
 	deleteSelfChatGroup,
 ]);
-router.post("/chat-group-image/:groupId", [headerAccessToken, upload.single("image"), uploadImage]);
+router.post("/chat-group-image/:groupId", [headerAccessToken, upload.single("image"), uploadImageChatGroup]);
 
 export default router;
