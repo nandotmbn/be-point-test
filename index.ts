@@ -8,6 +8,8 @@ import dotEnv from "dotenv";
 
 import AuthRoutes from "./src/routes/auth-routes";
 import ChatRoutes from "./src/routes/chat-routes";
+import ChatGroupRoutes from "./src/routes/chat-group-routes";
+import GroupRoutes from "./src/routes/group-routes";
 import headerLanguange from "./src/controllers/headers/header-language";
 import requestInfoLogger from "./src/middlewares/info";
 
@@ -25,6 +27,8 @@ app.use(headerLanguange);
 
 app.use("/api/v1", AuthRoutes); // Authentications Routes
 app.use("/api/v1", ChatRoutes); // Chats Routes
+app.use("/api/v1", ChatGroupRoutes); // Chats Routes
+app.use("/api/v1", GroupRoutes); // Chats Routes
 
 app.use(error);
 const port = process.env.PORT || 8888;

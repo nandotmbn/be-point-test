@@ -17,16 +17,6 @@ async function deleteSelfChat(req: Request, res: Response, next: NextFunction) {
 			})
 		);
 
-	const { error } = validateChat(req.body);
-	if (error)
-		return res.status(400).send(
-			message({
-				statusCode: 400,
-				data: error.message,
-				message: "Bad Request",
-			})
-		);
-
 	const isSenderExist = await User.findById(req.query._id);
 	if (!isSenderExist) {
 		return res.status(404).send(

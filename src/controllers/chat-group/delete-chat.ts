@@ -2,17 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import Chat, { validateChat, validateReceiverId } from "../../models/chat";
 import message from "../../views/message";
 import User from "../../models/user";
+import ChatGroup, { validateChatGroup, validateGroupId } from "../../models/chat-group";
+import Group from "../../models/groups";
 
-async function deleteChat(req: Request, res: Response, next: NextFunction) {
-	const validateReceiverIdRes = validateReceiverId({
-		receiverId: req.params.receiverId,
+async function deleteChatGroup(req: Request, res: Response, next: NextFunction) {
+	const validateGroupIdRes = validateGroupId({
+		groupId: req.params.groupId,
 	});
 
-	if (validateReceiverIdRes.error)
+	if (validateGroupIdRes.error)
 		return res.status(400).send(
 			message({
 				statusCode: 400,
-				data: validateReceiverIdRes.error.message,
+				data: validateGroupIdRes.error.message,
 				message: "Bad Request",
 			})
 		);
@@ -28,18 +30,18 @@ async function deleteChat(req: Request, res: Response, next: NextFunction) {
 		);
 	}
 
-	const isReceiver = await User.findById(req.params.receiverId);
+	const isReceiver = await Group.findById(req.params.groupId);
 	if (!isReceiver) {
 		return res.status(404).send(
 			message({
 				statusCode: 404,
-				message: "Receiver is not found",
+				message: "Group is not found",
 				data: req.body,
 			})
 		);
 	}
 
-	const isChatExist = await Chat.findById(req.params.chatId);
+	const isChatExist = await ChatGroup.findById(req.params.chatId);
 	if (!isChatExist) {
 		return res.status(404).send(
 			message({
@@ -50,7 +52,7 @@ async function deleteChat(req: Request, res: Response, next: NextFunction) {
 		);
 	}
 
-	const selfDeletedChat = await Chat.findByIdAndRemove(req.params.chatId);
+	const selfDeletedChat = await ChatGroup.findByIdAndRemove(req.params.chatId);
 
 	res.send(
 		message({
@@ -61,4 +63,4 @@ async function deleteChat(req: Request, res: Response, next: NextFunction) {
 	);
 }
 
-export default deleteChat;
+export default deleteChatGroup;

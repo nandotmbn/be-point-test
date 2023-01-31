@@ -17,8 +17,6 @@ const imageStorage = multer.diskStorage({
 			path.extname(file.originalname + ".jpg");
 		req.query.fileName = fileName;
 		cb(null, fileName);
-		// file.fieldname is name of the field (image)
-		// path.extname get the uploaded file extension
 	},
 });
 

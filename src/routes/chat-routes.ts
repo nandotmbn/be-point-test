@@ -15,6 +15,6 @@ router.delete("/chat/:receiverId/:chatId/self", [
 	headerAccessToken,
 	deleteSelfChat,
 ]);
-router.post("/image/:receiverId", [headerAccessToken, upload.single("image"), uploadImage]);
+router.post("/chat-image/:receiverId", [headerAccessToken, upload.single("image"), uploadImage]);
 
 export default router;
